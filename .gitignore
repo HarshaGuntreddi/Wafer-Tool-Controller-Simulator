@@ -1,0 +1,41 @@
+# .NET gitignore
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+
+# Logs
+*.log
+
+# Others
+[Tt]est[Rr]esult*/
+[Dd]ist/
+[Dd]ownloads/
+[Tt]mp/
+[Bb]uild/
+
+# End of https://github.com/dotnet/templates
