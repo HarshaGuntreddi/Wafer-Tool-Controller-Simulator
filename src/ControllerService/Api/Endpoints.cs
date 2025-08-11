@@ -1,4 +1,5 @@
 using ControllerService.Controller;
+using ControllerService.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -13,17 +14,25 @@ public static class Endpoints
         app.MapGet("/api/status", (ControllerState state) =>
             new StatusDto(state.Connected, state.LastHeartbeatUtc, state.CurrentState));
 
-        app.MapPost("/api/run/start", async (CommandSender sender, CancellationToken ct) =>
+        app.MapPost("/api/run/start", async (CommandSender sender, TelemetryIngestor ingestor, Repository repo, CancellationToken ct) =>
         {
+            var runId = await repo.CreateRunAsync(ct);
+            ingestor.BeginRun(runId);
             await sender.SendAsync(Command.LOAD, ct);
             await sender.SendAsync(Command.START, ct);
-            return Results.Ok();
+            return Results.Ok(new { runId });
         });
 
-        app.MapPost("/api/run/stop", async (CommandSender sender, CancellationToken ct) =>
+        app.MapPost("/api/run/stop", async (CommandSender sender, TelemetryIngestor ingestor, ControllerState state, Repository repo, CancellationToken ct) =>
         {
             await sender.SendAsync(Command.STOP, ct);
             await sender.SendAsync(Command.UNLOAD, ct);
+            var runId = ingestor.CurrentRunId;
+            if (runId.HasValue)
+            {
+                await repo.CloseRunAsync(runId.Value, state.CurrentState.ToString(), DateTime.UtcNow, ct);
+                ingestor.EndRun();
+            }
             return Results.Ok();
         });
 
