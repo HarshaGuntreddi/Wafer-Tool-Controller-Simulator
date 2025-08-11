@@ -1,0 +1,8 @@
+body {
+    font-family: sans-serif;
+    margin: 2rem;
+}
+
+.controls button {
+    margin-right: 0.5rem;
+}

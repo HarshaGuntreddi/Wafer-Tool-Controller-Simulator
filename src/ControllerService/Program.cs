@@ -14,6 +14,9 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{httpPort}");
 
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapApiEndpoints();
 
 await app.RunAsync();
